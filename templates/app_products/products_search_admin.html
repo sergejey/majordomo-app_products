@@ -1,6 +1,18 @@
 <!--#
  @version 0.3 (auto-set)
 #-->
+<style>
+@media screen and (max-width: 750px) {
+  .nav-tabs {
+    font-size: 0;
+  }
+
+  .nav-tabs:before {
+    margin: 0;
+    font-size: 18px;
+  }
+}
+</style>
 &nbsp;
 <table border="0" align="center">
  <form action="?" method="get">
@@ -125,11 +137,11 @@
 <hr size="1">
 
 <ul class="nav nav-tabs">
- <li [#if CATS#]class="active"[#endif#]><a href="?"><#LANG_CATEGORIES#></a></li>
- <li [#if ALL!=""#]class="active"[#endif#]><a href="?all=1"><#LANG_ALL_PRODUCTS#></a></li>
- <li [#if EXPIRED!=""#]class="active"[#endif#]><a href="?expired=1"><#LANG_EXPIRED#></a></li>
- <li [#if MISSING!=""#]class="active"[#endif#]><a href="?missing=1"><#LANG_MISSING#></a></li>
- <li [#if SHOPPING!=""#]class="active"[#endif#]><a href="?shopping=1"><#LANG_SHOPPING_LIST#></a></li>
+ <li [#if CATS#]class="active"[#endif#]><a href="?"><img src="/img/app_products/categories.png"><#LANG_CATEGORIES#></a></li>
+ <li [#if ALL!=""#]class="active"[#endif#]><a href="?all=1"><img src="/img/app_products/all.png"><#LANG_ALL_PRODUCTS#></a></li>
+ <li [#if EXPIRED!=""#]class="active"[#endif#]><a href="?expired=1"><img src="/img/app_products/expired.png"><#LANG_EXPIRED#></a></li>
+ <li [#if MISSING!=""#]class="active"[#endif#]><a href="?missing=1"><img src="/img/app_products/missing.png"><#LANG_MISSING#></a></li>
+ <li [#if SHOPPING!=""#]class="active"[#endif#]><a href="?shopping=1"><img src="/img/app_products/wallet.png"><#LANG_SHOPPING_LIST#></a></li>
 </ul>
 
 

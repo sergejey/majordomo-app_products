@@ -142,7 +142,7 @@ for ($is = 0; $is < $totals; $is++) {
         }    
     }        
 
-// echo $product . '<BR>';
+				$product = strtolower($product);
 				if($debugEnabled) debmes('Products produkt:'. $product);
 				$srch = array();
 				$srch['CODE'] = $product;

@@ -485,64 +485,9 @@ EOD;
 *
 * @access public
 */
- function addToListFromVoice($voiceList) {
-	global $sortby;
-	global $title;
-	 if(gg('debugEnabled') == 'Producty') $debugEnabled = 1;
-	 if($debugEnabled) debmes('Products incoming message:'. $voiceList);
-	$products = explode(" ", $voiceList);
-	if($debugEnabled) debmes('Products incoming count:'. count($products));
-	If (count($products) > 0) {
-		// $this->voice = True;
-		foreach ($products as $product) {
-			if(strlen($product) > 2)
-			{
-				if($debugEnabled) debmes('Products produkt:'. $product);
-				$srch = array();
-				$srch['CODE'] = $product;
-				$srch['IS_CODE'] = False;
-				$this->search_products($srch);
-				if (count($srch['RESULT']) > 0){
-				 $this->addToList($srch['RESULT'][0]['ID']);
-				 if($debugEnabled) debmes('Products produkt '.$product.' found, ID:'. $srch['RESULT'][0]['ID']);
-				}
-				Else 
-				{
-					if($debugEnabled) debmes('Products produkt '.$product.' not found, adding');
-					 $sear = array();
-					 $sortby = 'ID';
-					 $title = "Неотсортированные";
-					 // $sear['TITLE'] = "Неотсортированные";
-					 $this->search_product_categories($sear);
-					 if (count($sear) > 0){
-							if($debugEnabled) debmes('Products category exiting uncnoun');
-							$this->category_id = $sear['RESULT'][0]['ID'];
-							//$srch['CATEGORY_ID'] = $sear['RESULT'][0]['ID'];
-					 } 
-					 Else 
-					 {
-							if($debugEnabled) debmes('Products creating uncnoun');
-							$this->mode='update';
-							$this->edit_product_categories($srch);
-							$this->category_id = $srch['CATIDADDED'];
-							//$srch['CATEGORY_ID'] = $srch['CATIDADDED'];
-							if($debugEnabled) debmes('Products produkt '.$product.' adding to created uncnoun');
-					 }
-					 $this->mode='update';
-					 $this->tab=='';
-					 $title = $product;
-					 global $qty;
-					 $qty = 1;
-					 $addpr = array();
-					 $this->edit_products($addpr, 0);
-					 $this->addToList($addpr['ID']);
-					 if($debugEnabled) debmes('Products produkt '.$product.' not found, added to category id '.$srch['CATEGORY_ID']);
-				}
-			}
-		}
-	}
+ function addToListFromVoice($command) {
+	 require(DIR_MODULES.$this->name.'/product_addToListFromVoice.inc.php');
  }
-
   
 }
 /*

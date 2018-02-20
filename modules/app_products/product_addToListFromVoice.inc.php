@@ -20,28 +20,33 @@ $lang = 'ru_RU';
         $base_forms = array();
         $partsOfSpeech=array();
         $f_word=array();
-       $totals = count($words);
+        $totals = count($words);
         for ($is = 0; $is < $totals; $is++) {
             if (preg_match('/^(\d+)$/', $words[$is])) {
                 $base_forms[$is] = array($words[$is]);
-            } elseif (!preg_match('/[\(\)\+\.]/', $words[$is])) {
+            } else {
                 $Word = mb_strtoupper($words[$is], 'UTF-8');
                 $base_forms[$is] = $morphy->getBaseForm($Word);
                 $partsOfSpeech[$is] = $morphy->getPartOfSpeech($Word);
                 $f_word[$is] = $morphy->getGramInfo($Word);
                 $base_forms[$is][]=$words[$is];
-            } else {
-                $base_forms[$is] = array($words[$is]);
-            }
+            } 
         }
 
 
 for ($is = 0; $is < $totals; $is++) {
-
+    if ($base_forms[$is][0]=='ВОД') $base_forms[$is][0]='ВОДА';
     if ($partsOfSpeech[$is][0]=='С') {
+    
         if (($is+1)<$totals) {
             if ($partsOfSpeech[$is+1][0]=='С') {
-                $product=$base_forms[$is][0];
+        if ($base_forms[$is+1][0]=='МАРКА') {
+            $product=$base_forms[$is][0]. ' ' . $words[$is+1] . ' ' . $words[$is+2];
+            $is=$is+2;
+        }
+        else {
+            $product=$base_forms[$is][0];
+        }
             }
             elseif ($partsOfSpeech[$is+1][0]=='ПРЕДЛ') {
                 $product=$base_forms[$is][0] . ' ' . $words[$is+1] . ' ' . $words[$is+2];
@@ -54,7 +59,7 @@ for ($is = 0; $is < $totals; $is++) {
 
         }
         else {
-                $product=$base_forms[$is][0];
+            $product=$base_forms[$is][0];
         }
     }
     elseif ($partsOfSpeech[$is][0]=='П') {
@@ -131,60 +136,72 @@ for ($is = 0; $is < $totals; $is++) {
                     $is=$is+1;
                 }    
             }                
-                
-                
-            
-            
-            
         }
         else {
             $product=$base_forms[$is][0];
         }    
     }        
 
-				$product = strtolower($product);
-				if($debugEnabled) debmes('Products produkt:'. $product);
-				$srch = array();
-				$srch['CODE'] = $product;
-				$srch['IS_CODE'] = False;
-				$this->search_products($srch);
-				if (count($srch['RESULT']) > 0){
-				 $this->addToList($srch['RESULT'][0]['ID']);
-				 if($debugEnabled) debmes('Products produkt '.$product.' found, ID:'. $srch['RESULT'][0]['ID']);
-				}
-				Else 
-				{
-					if($debugEnabled) debmes('Products produkt '.$product.' not found, adding');
-					 $sear = array();
-					 $sortby = 'ID';
-					 $title = "Неотсортированные";
-					 // $sear['TITLE'] = "Неотсортированные";
-					 $this->search_product_categories($sear);
-					 if (count($sear) > 0){
-							if($debugEnabled) debmes('Products category exiting uncnoun');
-							$this->category_id = $sear['RESULT'][0]['ID'];
-							//$srch['CATEGORY_ID'] = $sear['RESULT'][0]['ID'];
-					 } 
-					 Else 
-					 {
-							if($debugEnabled) debmes('Products creating uncnoun');
-							$this->mode='update';
-							$this->edit_product_categories($srch);
-							$this->category_id = $srch['CATIDADDED'];
-							//$srch['CATEGORY_ID'] = $srch['CATIDADDED'];
-							if($debugEnabled) debmes('Products produkt '.$product.' adding to created uncnoun');
-					 }
-					 $this->mode='update';
-					 $this->tab=='';
-					 $title = $product;
-					 global $qty;
-					 $qty = 1;
-					 $addpr = array();
-					 $this->edit_products($addpr, 0);
-					 $this->addToList($addpr['ID']);
-					 if($debugEnabled) debmes('Products produkt '.$product.' not found, added to category id '.$srch['CATEGORY_ID']);
-				}
+    $product = strtolower($product);
+     
+    if($debugEnabled) debmes('Products produkt:'. $product);
+                
+    $id=Get_Product_ID( $product);
+    if ($id > 0){
+        $this->addToList($id);
+        if($debugEnabled) debmes('Products produkt '.$product.' found, ID:'. $id);
+    }
+    Else {
+        if($debugEnabled) debmes('Products produkt '.$product.' not found, adding');
+        $category_id = Get_Category_ID("Неотсортированные");
+        if ($category_id > 0){
+            if($debugEnabled) debmes('Products category exiting unknown');
+            $this->category_id = $category_id;
+        } 
+        Else {
+            if($debugEnabled) debmes('Products creating unknown');
+               $Record = Array();
+               $Record['TITLE'] = "Неотсортированные";
+               $Record['ID']=SQLInsert('product_categories', $Record);
+            $category_id = $Record['ID'];
+                            
+            if($debugEnabled) debmes('Products produkt '.$product.' adding to created unknown');
+        }
+
+           $Record = Array();
+           $Record['TITLE'] = $product;
+          $Record['CATEGORY_ID'] = $category_id;
+          $Record['QTY'] = 1;
+
+           $Record['ID']=SQLInsert('products', $Record);
+        $id = $Record['ID'];
+
+        $this->addToList($id);
+        if($debugEnabled) debmes('Products produkt '.$product.' not found, added to category id '.$category_id);
+    }
 
 
 } 
+
+function Get_Product_ID($product) {
+$res=SQLSelectOne("select ID from products where TITLE='" . $product . "'");
+
+$id=0;
+if ($res['ID']) {
+ $id=$res['ID'];
+}  
+
+return $id;
+}
+
+function Get_Category_ID($category) {
+$res=SQLSelectOne("select ID from product_categories where TITLE='" . $category . "'");
+$id=0;
+if ($res['ID']) {
+ $id=$res['ID'];
+}
+return $id;
+
+}
+
 ?>

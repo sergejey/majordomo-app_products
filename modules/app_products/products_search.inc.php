@@ -2,6 +2,7 @@
 /*
 * @version 0.2 (wizard)
 */
+	 if(gg('debugEnabled') == 'Producty') $debugEnabled = 1;
 
  global $ajax;
  global $op;
@@ -394,6 +395,7 @@
 
   $sortby="CATEGORY_ID, TITLE";
   if ($out['SHOPPING']) {
+	  if($debugEnabled) debmes('Products search shopping yes');
    $sortby="IN_CART, CATEGORY_ID, TITLE";
   }
 
@@ -405,9 +407,10 @@
    //paging($res, 50, $out); // search result paging
    $total=count($res);
    $old_category_id=0;
+   $incart = 0;
    for($i=0;$i<$total;$i++) {
     // some action for every record if required
-
+	
     $tmp=SQLSelectOne("SELECT ID FROM shopping_list_items WHERE PRODUCT_ID='".$res[$i]['ID']."'");
     if ($tmp['ID']) {
      $res[$i]['INCART']=1;
@@ -416,18 +419,17 @@
     }
 
 
-    if ($out['SHOPPING']) {
-     if ($res[$i]['IN_CART']!=$old_category_id) {
-      $res[$i]['CATEGORY_TITLE']='Cart';
-      $old_category_id=$res[$i]['IN_CART'];
-      $res[$i]['NEW_CATEGORY']=1;
-     }
-    } else {
      if ($res[$i]['CATEGORY_ID']!=$old_category_id) {
       $old_category_id=$res[$i]['CATEGORY_ID'];
       $res[$i]['NEW_CATEGORY']=1;
      }
+    if ($out['SHOPPING']) {
+     if ($res[$i]['IN_CART']!=$incart) {
+      $res[$i]['CATEGORY_TITLE']='В карзине:<br/>'.$res[$i]['CATEGORY_TITLE'];
+      $incart=$res[$i]['IN_CART'];
+     }
     }
+    
 
     if ($res[$i]['EXPIRE_TERM']>15) {
      unset($res[$i]['EXPIRE_TERM']);

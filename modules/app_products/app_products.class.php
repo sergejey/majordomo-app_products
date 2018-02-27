@@ -479,6 +479,16 @@ EOD;
   parent::dbInstall($data);
  }
 // --------------------------------------------------------------------
+  
+/**
+* add To Shoping List From Voice
+*
+* @access public
+*/
+ function addToListFromVoice($command) {
+	 require(DIR_MODULES.$this->name.'/product_addToListFromVoice.inc.php');
+ }
+  
 }
 /*
 *

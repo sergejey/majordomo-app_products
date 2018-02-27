@@ -14,8 +14,8 @@
 }
 </style>
 &nbsp;
+<form action="?" method="get">
 <table border="0" align="center">
- <form action="?" method="get">
  <tr>
   <td style="vertical-align:middle">Title/Code: </td>
   <td > <input class="form-control" type="text" name="code" value="[#CODE#]" id="code_new"></td>
@@ -23,12 +23,12 @@
  </tr>
  <input type="hidden" name="category_id" value="<#CATEGORY_ID#>">
  <input type="hidden" name="shopping" value="<#SHOPPING#>">
- </form>
- <script language="javascript">
-  var elem=document.getElementById('code_new');
-  elem.focus();
- </script>
 </table>
+</form>
+<script language="javascript">
+ var elem=document.getElementById('code_new');
+ elem.focus();
+</script>
 
 [#if CODE!=""#]
 <table border="0" align="center">

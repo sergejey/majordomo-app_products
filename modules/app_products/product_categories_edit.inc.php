@@ -8,6 +8,9 @@
   }
   $table_name='product_categories';
   $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
+  if(file_exists(ROOT.'cms/products/image_catproduct_'.$id.'.jpg')) {
+	  $out['CAT_IMG']=ROOT.'cms/products/image_catproduct_'.$id.'.jpg';
+  }
   if ($parent_id) {
    $rec['PARENT_ID']=(int)$parent_id;
   }
@@ -34,6 +37,13 @@
      $new_rec=1;
      $rec['ID']=SQLInsert($table_name, $rec); // adding new record
     }
+	global $cat_img;
+	if ($cat_img!='') {
+		if ($out['CAT_IMG']!='') {
+		 @unlink(ROOT.'cms/products/image_catproduct_'.$out['CAT_IMG'].'.jpg');
+		}
+		copy($cat_img, ROOT.'cms/products/image_catproduct_'.$rec['ID'].'.jpg');
+	} 
     $this->updateTree_product_categories();
     $out['OK']=1;
    } else {

@@ -11,7 +11,20 @@
     margin: 0;
     font-size: 18px;
   }
+  
+  .mob_body {width: 100% !important;}
+  .mob_body_product {width: 45% !important; height: 100px !important;}
+  .title_m {text-align: center;font-size: 13px !important;height: auto !important; width: 126px !important;}
+  .images_product {text-align: center; width: 100% !important; height: 53px !important;}
+  .counter_m {margin-top: -77px !important;}
+
 }
+.product_m {margin: 0 0 10px 10px;border-radius: 5px;padding: 7px 7px 0px 7px;border: 1px solid #d2d2d2;vertical-align: middle;width: 250px;height: 75px;display: inline-block;}
+.images_product {width: 60px;height: 53px;display: inline-block;}
+.title_m {height: 45px;font-size: 17px;display: inline-block;width: 165px; }
+.counter_m {font-size: 26px; color: #ececec; float: right; position: initial; right: 0; margin-top: -25px;}
+.product_hover:hover {border: 1px solid #ff8912 !important;}
+.crug { border-radius: 50%; }
 </style>
 &nbsp;
 <form action="?" method="get">
@@ -229,13 +242,13 @@
 <!-- search results (list) -->
 [#if CATS#]
 <div id="all_categories">
-<ul>
+<div class="mob_body" style="padding: 10px;width: 810px;">
  [#begin CATS#]
- <li><a href="?category_id=[#ID#]">[#TITLE#][#if TOTAL!="0"#] ([#TOTAL#])[#endif#]</a>
+ <!--li--><a href="?category_id=[#ID#]"><div class="product_m product_hover mob_body_product" onclick="location.href='?category_id=[#ID#]'"><div class="images_product"><img style="max-height: 50px; max-width: 50px; margin-right: 10px;" src="<#ROOTHTML#>cms/products/image_catproduct_[#ID#].jpg" onError="this.src='<#ROOTHTML#>img/noimg.png'" border="0" alt=""></div><div class="title_m">[#TITLE#]</div><div class="counter_m"> [#TOTAL#]</div>
  [#if CATS#]<ul>[#tree CATS#]</ul>[#endif CATS#]
- </li>
+ </div></a><!--/li-->
  [#end CATS#]
-</ul>
+</div>
 </div>
 [#else CATS#]
 

@@ -490,6 +490,24 @@ EOD;
  function addToListFromVoice($command) {
 	 require(DIR_MODULES.$this->name.'/product_addToListFromVoice.inc.php');
  }
+ function deleteShopingList() {
+	SQLExec("DELETE FROM `shopping_list_items` WHERE `IN_CART` = 1");
+ }
+ 
+ function readShopingList() {
+  $result = array();
+  $res=SQLSelect("SELECT `TITLE`, `List_Qty`, `Ed_Izm` FROM `shopping_list_items`");
+  $result['ARRAY'] = $res;
+  $total=count($res);
+  for($i=0;$i<$total;$i++) 
+  {
+   $result['TEXT'] .= $res[$i]['TITLE'].' '.$res[$i]['List_Qty'].' '.$res[$i]['Ed_Izm'];
+   if ($i < $total - 1) $result['TEXT'] .= ', ';
+            
+  } 
+  
+  return($result);
+ }
   
 }
 /*

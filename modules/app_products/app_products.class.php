@@ -460,6 +460,8 @@ shopping_list_items - Shopping List
  shopping_list_items: PRICE float DEFAULT '0' NOT NULL
  shopping_list_items: CODE varchar(255) NOT NULL DEFAULT ''
  shopping_list_items: IN_CART int(3) NOT NULL DEFAULT '0'
+ shopping_list_items: List_Qty int(3)NOT NULL DEFAULT '1'
+ shopping_list_items: Ed_Izm varchar(15)
 
  product_log: ID int(10) unsigned NOT NULL auto_increment
  product_log: TITLE varchar(255) NOT NULL DEFAULT ''

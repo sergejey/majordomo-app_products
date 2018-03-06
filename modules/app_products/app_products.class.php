@@ -460,6 +460,8 @@ shopping_list_items - Shopping List
  shopping_list_items: PRICE float DEFAULT '0' NOT NULL
  shopping_list_items: CODE varchar(255) NOT NULL DEFAULT ''
  shopping_list_items: IN_CART int(3) NOT NULL DEFAULT '0'
+ shopping_list_items: List_Qty int(3)NOT NULL DEFAULT '1'
+ shopping_list_items: Ed_Izm varchar(15)
 
  product_log: ID int(10) unsigned NOT NULL auto_increment
  product_log: TITLE varchar(255) NOT NULL DEFAULT ''
@@ -487,6 +489,24 @@ EOD;
 */
  function addToListFromVoice($command) {
 	 require(DIR_MODULES.$this->name.'/product_addToListFromVoice.inc.php');
+ }
+ function deleteShopingList() {
+	SQLExec("DELETE FROM `shopping_list_items` WHERE `IN_CART` = 1");
+ }
+ 
+ function readShopingList() {
+  $result = array();
+  $res=SQLSelect("SELECT `TITLE`, `List_Qty`, `Ed_Izm` FROM `shopping_list_items`");
+  $result['ARRAY'] = $res;
+  $total=count($res);
+  for($i=0;$i<$total;$i++) 
+  {
+   $result['TEXT'] .= $res[$i]['TITLE'].' '.$res[$i]['List_Qty'].' '.$res[$i]['Ed_Izm'];
+   if ($i < $total - 1) $result['TEXT'] .= ', ';
+            
+  } 
+  
+  return($result);
  }
   
 }

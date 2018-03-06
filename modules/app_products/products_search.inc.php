@@ -402,7 +402,7 @@
 
   $out['SORTBY']=$sortby;
   // SEARCH RESULTS
-  $res=SQLSelect("SELECT products.*, shopping_list_items.IN_CART, (TO_DAYS(EXPIRE_DATE)-TO_DAYS(NOW())) as EXPIRE_TERM, product_categories.TITLE as CATEGORY_TITLE FROM products LEFT JOIN product_categories ON products.CATEGORY_ID=product_categories.ID LEFT JOIN shopping_list_items ON products.ID=shopping_list_items.PRODUCT_ID WHERE $qry ORDER BY $sortby");
+  $res=SQLSelect("SELECT LIST_QTY,ED_IZM, products.*, shopping_list_items.IN_CART, (TO_DAYS(EXPIRE_DATE)-TO_DAYS(NOW())) as EXPIRE_TERM, product_categories.TITLE as CATEGORY_TITLE FROM products LEFT JOIN product_categories ON products.CATEGORY_ID=product_categories.ID LEFT JOIN shopping_list_items ON products.ID=shopping_list_items.PRODUCT_ID WHERE $qry ORDER BY $sortby");
   if ($res[0]['ID']) {
    //paging($res, 50, $out); // search result paging
    $total=count($res);

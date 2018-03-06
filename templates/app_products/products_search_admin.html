@@ -264,7 +264,7 @@
 <table border="0" cellpadding="5">
 [#endif NEW_CATEGORY#]
 <tr>
- [#if "<#SHOPPING#>"=="1"#]
+[#if "<#SHOPPING#>"=="1"#]
  <td>
  <div id="product_[#ID#]_ok"[#if IN_CART!="1"#] style="display:none"[#endif#]>
  <a href="#" onClick="return notInCart([#ID#]);"><img src="<#ROOTHTML#>img/btn/ok.png" border="0"></a>
@@ -272,10 +272,15 @@
  <div id="product_[#ID#]_notok"[#if IN_CART="1"#] style="display:none"[#endif#]>
  <a href="#" onClick="return inCart([#ID#]);"><img src="<#ROOTHTML#>img/btn/notok.png" border="0"></a>
  </td>
- [#endif#]
- <td style="text-align:center;">[#if IMAGE!=""#]<img style='max-height:45px; max-width: 26px;' src='/cms/products/[#IMAGE#]'>[#endif#]</td>
+[#endif#]
+<td style="text-align:center;">[#if IMAGE!=""#]<img style='max-height:45px; max-width: 26px;' src='/cms/products/[#IMAGE#]'>[#endif#]</td>
  <td  width="85%">
   <a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_products&id=[#ID#]"><b>[#TITLE#]</b></a>
+  [#if "<#SHOPPING#>"=="1"#]
+   <span id="product[#ID#]_qty">[#LIST_QTY#] [#ED_IZM#]</span>
+  [#else#]
+   <span id="product[#ID#]_qty">[#QTY#]</span>
+  [#endif#]
   [#if EXPIRE_TERM!="" && QTY!="0"#]
    <div><#LANG_EXPIRE_IN#> [#EXPIRE_TERM#] <#LANG_DAYS#>. [#if EXPIRED#]<b style="color:red"><#LANG_EXPIRED#></b>[#endif EXPIRED#]</div>
   [#endif#]

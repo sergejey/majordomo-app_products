@@ -6,72 +6,65 @@
 <p align=center>
  <a href="?data_source=<#DATA_SOURCE#>">&lt;&lt;&lt; <#LANG_BACK#></a>
 </p>
-<table border=0 align=center cellpadding=3>
-<form action="?" method="post" enctype="multipart/form-data" name="frmEdit">
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 [#if OK#]
-<tr>
- <td colspan=2 align=center>
-  <font color="green"><#LANG_DATA_SAVED#></font>
- </td>
-</tr>
+<div class="alert alert-success"><#LANG_DATA_SAVED#></div>
 [#endif OK#]
 [#if ERR#]
-<tr>
- <td colspan=2 align=center>
-  <font color="red"><#LANG_FILLOUT_REQURED#></font>
- </td>
-</tr>
+<div class="alert alert-error"><#LANG_FILLOUT_REQURED#></div>
 [#endif ERR#]
 [#if ID=""#]
-<tr>
- <td colspan=2 align=center><b><#LANG_NEW_RECORD#></b></td>
-</tr>
+<legend><#LANG_NEW_RECORD#></legend>
 [#endif ID#]
-<tr>
- <td align=right><#LANG_PARENT#>:</td>
- <td><select name="parent_id">
- <option value="0"><#LANG_ROOT#>
- [#begin PARENTS#]
- <option value="[#ID#]"[#if ID="<#PARENT_ID#>"#] selected[#endif#]>[#TITLE#]
- [#end PARENTS#]
- </select></td>
-</tr>
-<!-- TITLE (varchar) -->
-<tr>
- <td align=right>
- [#if ERR_TITLE#]<b><font color="red">[#endif#]
+
+
+<div class="form-group">
+ <label class="col-lg-3 control-label"[#if ERR_TYPE#] style="color:red;font-weight:bold"[#endif#]>
+	<#LANG_PARENT#>:
+ </label>
+ <div class="col-lg-4">
+	 <select class="form-control" name="parent_id">
+		<option value="0"><#LANG_ROOT#>
+		[#begin PARENTS#]
+			<option value="[#ID#]"[#if ID="<#PARENT_ID#>"#] selected[#endif#]>[#TITLE#]
+		[#end PARENTS#]
+	 </select>
+ </div>
+</div>
+<div class="form-group">
+ <label class="col-lg-3 control-label"[#if ERR_TITLE#] style="color:red;font-weight:bold"[#endif#]>
  <#LANG_TITLE#>:
  (*)
- </td>
- <td>
-  <input type="text" name="title" value="[#TITLE#]">
- </td>
-</tr>
-<!-- PRIORITY (int) -->
-<tr>
- <td align=right>
- [#if ERR_PRIORITY#]<b><font color="red">[#endif#]
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="title" value="[#TITLE#]" id="title"></div>
+</div>
+<div class="form-group">
+ <label class="col-lg-3 control-label"[#if ERR_PRIORITY#] style="color:red;font-weight:bold"[#endif#]>
  <#LANG_PRIORITY#>:
- </td>
- <td>
-  <input type="text" name="priority" value="[#PRIORITY#]">
- </td>
-</tr>
-<tr>
- <td colspan=2 align=center>
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="priority" value="[#PRIORITY#]" id="priority"></div>
+</div>
+<div class="form-group">
+ <label class="col-lg-3 control-label"[#if ERR_PRIORITY#] style="color:red;font-weight:bold"[#endif#]>
+ <#LANG_IMAGE#>:
+ </label>
+ <div class="col-lg-4">[#if CAT_IMG!=""#]<img src="<#ROOTHTML#>cms/products/image_catproduct_<#ID#>.jpg" border="0" height="50"><br>[#endif#]<input type="file" class="form-control" name="cat_img" ><br></div>
+</div>
+
+<div class="form-group">
+        <div class="col-lg-offset-3 col-lg-4">
  [#if ID!=""#]
- <input type="submit" name="subm" value="<#LANG_SUBMIT#>">
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
  [#else ID#]
- <input type="submit" name="subm" value="<#LANG_ADD#>">
+ <button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
  [#endif ID#]
- &nbsp;
- <a href="?data_source=<#DATA_SOURCE#>"><#LANG_CANCEL#></a>
- </td>
-</tr>
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default "><#LANG_CANCEL#></a>
 <input type="hidden" name="id" value="<#ID#>">
 <input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
 <input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
 <input type="hidden" name="mode" value="update">
 <input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+</div>
+</div>
 </form>
-</table>
+

@@ -21,14 +21,13 @@
  
   [#if "<#ACTION#>"=="admin"#]
   
-    <b><a  class="btn btn-default btn-sm" href="?data_source=<#DATA_SOURCE#>&view_mode=edit_product_categories&id=[#ID#]"><#LANG_EDIT#></a></b>
-   
+    <b><a  class="btn btn-default btn-sm" href="?data_source=<#DATA_SOURCE#>&view_mode=edit_product_categories&id=[#ID#]" title="<#LANG_EDIT#>"><i class="glyphicon glyphicon-pencil"></i></a></b>
   
-    <b><a  class="btn btn-default btn-sm" href="?data_source=<#DATA_SOURCE#>&view_mode=edit_product_categories&parent_id=[#ID#]"><#LANG_EXPAND#></a>
+    <b><a  class="btn btn-default btn-sm" href="?data_source=<#DATA_SOURCE#>&view_mode=edit_product_categories&parent_id=[#ID#]" title="<#LANG_EXPAND#>"><i class="glyphicon glyphicon-save"></i></a>
    
   [#if !RESULT#]
 
-    <a  class="btn btn-default btn-sm" href="?data_source=<#DATA_SOURCE#>&view_mode=delete_product_categories&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')"><#LANG_DELETE#></a>
+    <a  class="btn btn-default btn-sm" href="?data_source=<#DATA_SOURCE#>&view_mode=delete_product_categories&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')" title="<#LANG_DELETE#>"><i class="glyphicon glyphicon-remove"></i></a>
   
   [#endif RESULT#]
   [#endif ACTION#]

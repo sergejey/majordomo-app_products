@@ -446,6 +446,7 @@ sg('ThisComputer.weatherToday',$shopping);
       $res[$i]['NEW_CATEGORY']=1;
      }
     if ($out['SHOPPING']) {
+     $res[$i]['CATEGORY_TITLE']='<a href="/index.php?pd='.$_GET['pd'].'&md=app_products&inst=&category_id='.$res[$i]['CATEGORY_ID'].'">'.$res[$i]['CATEGORY_TITLE'].'</a>';
      if ($res[$i]['IN_CART']!=$incart) {
       $res[$i]['CATEGORY_TITLE']='<br><br><hr><span style="color:red;">В корзине:</span><br/>'.$res[$i]['CATEGORY_TITLE'];
       $incart=$res[$i]['IN_CART'];

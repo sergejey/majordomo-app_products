@@ -169,9 +169,9 @@
   elem.innerHTML=data;
   return false;
  }
- function changeQty(type, id) {
+ function changeQty(type, id,shopping) {
   var url="?ajax=1";
-  url+='&op='+type+'&id='+id;
+  url+='&op='+type+'&id='+id+'&shopping=' +shopping;
   AJAXRequest(url, 'changeQtyProcessed', id)
   return false;
  }
@@ -275,12 +275,7 @@
 [#endif#]
 <td style="text-align:center;">[#if IMAGE!=""#]<img style='max-height:45px; max-width: 26px;' src='/cms/products/[#IMAGE#]'>[#endif#]</td>
  <td  width="85%">
-  <a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_products&id=[#ID#]"><b>[#TITLE#]</b></a>
-  [#if "<#SHOPPING#>"=="1"#]
-   <span id="product[#ID#]_qty">[#LIST_QTY#] [#ED_IZM#]</span>
-  [#else#]
-   <span id="product[#ID#]_qty">[#QTY#]</span>
-  [#endif#]
+  <a href="?data_source=products&view_mode=edit_products&id=[#ID#]"><b>[#TITLE#]</b></a>
   [#if EXPIRE_TERM!="" && QTY!="0"#]
    <div><#LANG_EXPIRE_IN#> [#EXPIRE_TERM#] <#LANG_DAYS#>. [#if EXPIRED#]<b style="color:red"><#LANG_EXPIRED#></b>[#endif EXPIRED#]</div>
   [#endif#]
@@ -288,11 +283,19 @@
    <div><#LANG_RECOMENDED_QUANTITY#>: [#RECOMMENDED#]</div>  
   [#endif#]
  </td>
- <td><a href="#" onClick='return changeQty("minus", "[#ID#]")'><img src="<#ROOTHTML#>img/btn/minus.png" border="0"></a></td>
- <td align=center width="5%">
-  <span id="product[#ID#]_qty">[#QTY#]</span>
- </td>
- <td><a href="#" onClick='return changeQty("plus", "[#ID#]")'><img src="<#ROOTHTML#>img/btn/plus.png" border="0"></a></td>
+  [#if "<#SHOPPING#>"=="1"#]
+  <td><a href="#" onClick='return changeQty("minus", "[#ID#]", "1")'><img src="<#ROOTHTML#>img/btn/minus.png" border="0"></a></td>
+  <td align=center width="5%">
+   <span id="product[#ID#]_qty">[#LIST_QTY#] [#ED_IZM#]</span>
+   </td>
+   <td><a href="#" onClick='return changeQty("plus", "[#ID#]", "1")'><img src="<#ROOTHTML#>img/btn/plus.png" border="0"></a></td>
+  [#else#]
+  <td><a href="#" onClick='return changeQty("minus", "[#ID#]", "0")'><img src="<#ROOTHTML#>img/btn/minus.png" border="0"></a></td>
+  <td align=center width="5%">
+   <span id="product[#ID#]_qty">[#QTY#]</span>
+  </td>
+  <td><a href="#" onClick='return changeQty("plus", "[#ID#]", "0")'><img src="<#ROOTHTML#>img/btn/plus.png" border="0"></a></td>
+  [#endif#]
  <td>
  <div id="product_[#ID#]_incart"[#if INCART!="1"#] style="display:none"[#endif#]>
  <a href="#" onClick="return removeFromCart([#ID#]);"><img src="<#ROOTHTML#>img/btn/incart.png" border="0"></a>

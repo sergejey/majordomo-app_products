@@ -8,6 +8,9 @@
  global $op;
  global $id;
  global $shopping;
+
+sg('ThisComputer.weatherToday',$shopping);
+
  if ($shopping) {
   $out['SHOPPING']=1;
  }
@@ -29,15 +32,18 @@
   }
 
   if ($op=='incart') {
-   SQLExec("UPDATE products SET QTY=QTY+1 WHERE ID='".(int)$id."'");
+   $rec=SQLSelectOne("SELECT * FROM shopping_list_items WHERE PRODUCT_ID='".(int)$id."'");
+
+   SQLExec("UPDATE products SET QTY=QTY+" . $rec['List_Qty'] . " WHERE ID='".(int)$id."'");
    SQLExec("UPDATE shopping_list_items SET IN_CART=1 WHERE PRODUCT_ID='".(int)$id."'");
    echo "OK";
-   $rec=SQLSelectOne("SELECT * FROM products WHERE ID='".(int)$id."'");
    say('Добавлено в корзину '.$rec['TITLE']);
   }
 
   if ($op=='notincart') {
-   SQLExec("UPDATE products SET QTY=QTY-1 WHERE ID='".(int)$id."'");
+   $rec=SQLSelectOne("SELECT * FROM shopping_list_items WHERE PRODUCT_ID='".(int)$id."'");
+
+   SQLExec("UPDATE products SET QTY=QTY-" . $rec['List_Qty'] . " WHERE ID='".(int)$id."'");
    SQLExec("UPDATE shopping_list_items SET IN_CART=0 WHERE PRODUCT_ID='".(int)$id."'");
    echo "OK";
   }
@@ -45,16 +51,17 @@
 
 
   if ($op=='plus') {
-   $rec=SQLSelectOne("SELECT * FROM products WHERE ID='".(int)$id."'");
-   $rec['UPDATED']=date('Y-m-d H:i:s');
-   $rec['QTY']+=1;
-   if ($rec['EXPIRE_DEFAULT']>0) {
-    $rec['EXPIRE_DATE']=date('Y-m-d H:i:s', (time()+$rec['EXPIRE_DEFAULT']*60*60*24));
-   } else {
-    $rec['EXPIRE_DATE']='0000-00-00 00:00:00';
-   }
+   if ($shopping==0) {
+    $rec=SQLSelectOne("SELECT * FROM products WHERE ID='".(int)$id."'");
+    $rec['UPDATED']=date('Y-m-d H:i:s');
+    $rec['QTY']+=1;
+    if ($rec['EXPIRE_DEFAULT']>0) {
+     $rec['EXPIRE_DATE']=date('Y-m-d H:i:s', (time()+$rec['EXPIRE_DEFAULT']*60*60*24));
+    } else {
+     $rec['EXPIRE_DATE']='0000-00-00 00:00:00';
+    }
 
-   SQLUpdate('products', $rec);
+    SQLUpdate('products', $rec);
 
     $log=array();
     $log['UPDATED']=date('Y-m-d H:i:s');
@@ -71,9 +78,16 @@
     }
     $log['ID']=SQLInsert('product_log', $log);
 
-   echo $rec['QTY'];
+    echo $rec['QTY'];
+   } else {
+    $rec=SQLSelectOne("SELECT * FROM shopping_list_items WHERE PRODUCT_ID='".(int)$id."'");
+    $rec['List_Qty']+=1;
+    SQLUpdate('shopping_list_items', $rec);
+    echo $rec['List_Qty'] . ' ' . $rec['Ed_Izm'] ;
+   }
   }
   if ($op=='minus') {
+   if ($shopping==0) {
    $rec=SQLSelectOne("SELECT * FROM products WHERE ID='".(int)$id."'");
    $rec['UPDATED']=date('Y-m-d H:i:s');
    $rec['QTY']-=1;
@@ -99,6 +113,14 @@
     $rec['QTY']=0;
    }
    echo $rec['QTY'];
+  } else {
+   $rec=SQLSelectOne("SELECT * FROM shopping_list_items WHERE PRODUCT_ID='".(int)$id."'");
+   if ($rec['List_Qty']>0) {
+    $rec['List_Qty']-=1;
+    SQLUpdate('shopping_list_items', $rec);
+   }
+   echo $rec['List_Qty'] . ' ' . $rec['Ed_Izm'] ;
+   }
   }
   exit;
  }
@@ -424,9 +446,11 @@
       $res[$i]['NEW_CATEGORY']=1;
      }
     if ($out['SHOPPING']) {
+     $res[$i]['CATEGORY_TITLE']='<a href="/index.php?pd='.$_GET['pd'].'&md=app_products&inst=&category_id='.$res[$i]['CATEGORY_ID'].'">'.$res[$i]['CATEGORY_TITLE'].'</a>';
      if ($res[$i]['IN_CART']!=$incart) {
-      $res[$i]['CATEGORY_TITLE']='В карзине:<br/>'.$res[$i]['CATEGORY_TITLE'];
+      $res[$i]['CATEGORY_TITLE']='<br><br><hr><span style="color:red;">В корзине:</span><br/>'.$res[$i]['CATEGORY_TITLE'];
       $incart=$res[$i]['IN_CART'];
+      $res[$i]['NEW_CATEGORY']=1;
      }
     }
     

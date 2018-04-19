@@ -59,7 +59,7 @@ for ($is = 0; $is < $totals; $is++) {
             }
         }
         if ( count($partsOfSpeech[$is])==2) {
-            if ($partsOfSpeech[$is][0]=="С" and $partsOfSpeech[$is][1]=="П") {
+            if ($partsOfSpeech[$is][0]=="С" and $partsOfSpeech[$is][1]=="П" and !in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) {
                 // Если слово может быть и существительным и прилагательным, выбираем прилагательное. Пример - красный
                 $partsOfSpeech[$is][0]="П";
                 $chislo=array_intersect($f_word[$is][1][0]['grammems'],['ЕД', 'МН']);
@@ -118,15 +118,15 @@ for ($is = 0; $is < $totals; $is++) {
         
         $qty=(int)$words[$is];
         if (($is+1)<$totals) {
-            if (in_array($base_forms[$is+1][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН'))) {         
-                $ed_izm=$base_forms[$is+1][0];
+            if (in_array($base_forms[$is+1][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН','ЛИТР'))) {         
+                $ed_izm=mb_strtolower($base_forms[$is+1][0]);
                 $is++;
             
             }
         }
     }
-    elseif (in_array($base_forms[$is][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН'))) { 
-        $ed_izm=$base_forms[$is][0];
+    elseif (in_array($base_forms[$is][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН','ЛИТР'))) { 
+        $ed_izm=mb_strtolower($base_forms[$is][0]);
             
     }
     else {
@@ -172,16 +172,30 @@ for ($is = 0; $is < $totals; $is++) {
                     $product=$noun . ' ' . $words[$is+1] . ' ' . $words[$is+2];
                     $is=$is+2;
                 }
-                elseif ($partsOfSpeech[$is+1][0]=='П') {
+                elseif ($partsOfSpeech[$is+1][0]=='П' or $partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ') {
                     $rod=array_intersect($f_word[$is+1][0][0]['grammems'],['МР', 'ЖР', 'СР']);
                     $rod=reset($rod);
-                    // Выбираем форму прилагательного правильного рода
-                    if ($chislo=='ЕД') {
+                    // Выбираем форму прилагательного или причастия правильного рода
+		    if ($partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ') {
+ 		     $zalog=array_intersect($f_word[$is+1][0][0]['grammems'],['СТР', 'ДСТ']);
+                     $zalog=reset($zalog);
+  		     $vremja=array_intersect($f_word[$is+1][0][0]['grammems'],['ПРШ', 'НСТ']);
+                     $vremja=reset($vremja);
+                     if ($chislo=='ЕД') {
+                        $adjective=$morphy->castFormByGramInfo($base_forms[$is+1][0],"ПРИЧАСТИЕ",[$rod,'ЕД','ИМ',$zalog,$vremja]);
+                     }
+                     else {
+                        $adjective=$morphy->castFormByGramInfo($base_forms[$is+1][0],"ПРИЧАСТИЕ",['МН','ИМ',$zalog,$vremja]);
+                     }
+
+		    } else {
+                     if ($chislo=='ЕД') {
                         $adjective=$morphy->castFormByGramInfo($base_forms[$is+1][0],"П",[$rod,'ЕД','ИМ']);
-                    }
-                    else {
+                     }
+                     else {
                         $adjective=$morphy->castFormByGramInfo($base_forms[$is+1][0],"П",['МН','ИМ']);
-                    }
+                     }
+		    } 
                     $adjective=$adjective[0]['form'];
                     if (preg_match('/([a-zA-Z])/',$words[$is])) $noun=$words[$is];
                     else {
@@ -198,7 +212,7 @@ for ($is = 0; $is < $totals; $is++) {
                         $is=$is+1;
                     }
                     else {
-                        if (preg_match('/([a-zA-Z])/',$words[$is])) $noun=$words[$is];
+                        if (preg_match('/([a-zA-Z])/',$words[$is]) or in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) $noun=$words[$is];
                         else {
                             if ($chislo=='ЕД') {
                                 $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$rod,'ЕД','ИМ']);
@@ -214,7 +228,7 @@ for ($is = 0; $is < $totals; $is++) {
             }
 
             else {
-                if (preg_match('/([a-zA-Z])/',$words[$is])) $noun=$words[$is];
+                if (preg_match('/([a-zA-Z])/',$words[$is]) or in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) $noun=$words[$is];
                 else {
                     if ($chislo=='ЕД') {
                         $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$chislo,$rod1,'ИМ']);
@@ -227,24 +241,38 @@ for ($is = 0; $is < $totals; $is++) {
                 $product=$noun;
             }
         }
-        elseif ($partsOfSpeech[$is][0]=='П') {
+        elseif ($partsOfSpeech[$is][0]=='П' or $partsOfSpeech[$is][0]=='ПРИЧАСТИЕ') {
             $rod=array_intersect($f_word[$is][0][0]['grammems'],['МР', 'ЖР', 'СР']);
             $rod=reset($rod);
             $chislo=array_intersect($f_word[$is][0][0]['grammems'],['МН', 'ЕД']);
             $chislo=reset($chislo);
 
             // Выбираем форму прилагательного правильного рода
-            if ($chislo=='ЕД') {
+	    if ($partsOfSpeech[$is][0]=='ПРИЧАСТИЕ') {
+	     $zalog=array_intersect($f_word[$is][0][0]['grammems'],['СТР', 'ДСТ']);
+             $zalog=reset($zalog);
+	     $vremja=array_intersect($f_word[$is][0][0]['grammems'],['ПРШ', 'НСТ']);
+             $vremja=reset($vremja);
+             if ($chislo=='ЕД') {
+                $adjective=$morphy->castFormByGramInfo($base_forms[$is][0],"ПРИЧАСТИЕ",[$rod,'ЕД','ИМ',$zalog,$vremja]);
+             }
+             else {
+                $adjective=$morphy->castFormByGramInfo($base_forms[$is][0],"ПРИЧАСТИЕ",['МН','ИМ',$zalog,$vremja]);
+             }
+
+       	    } else { 
+             if ($chislo=='ЕД') {
                 $adjective=$morphy->castFormByGramInfo($base_forms[$is][0],"П",[$rod,'ЕД','ИМ']);
-            }
-            else {
+             }
+             else {
                 $adjective=$morphy->castFormByGramInfo($base_forms[$is][0],"П",['МН','ИМ']);
-            }
+             }
+	    } 
             $adjective=$adjective[0]['form'];
             if (($is+1)<$totals) {
                 if ($partsOfSpeech[$is+1][0]=='С') {
                     if (count($base_forms[$is+1])>1){
-                        // выбираем форму согласованную по роду
+                        // выбираем форму согласованную по роду  
                         for ($kk= 0; $kk < count($base_forms[$is+1])-1; $kk++) {
                             $rod1=array_intersect($f_word[$is+1][$kk][0]['grammems'],['МР', 'ЖР', 'СР']);
                             $rod1=reset($rod1);
@@ -271,14 +299,28 @@ for ($is = 0; $is < $totals; $is++) {
                         $is=$is+1; 
                     } 
                 }
-                elseif ($partsOfSpeech[$is+1][0]=='П') {
-                    if ($chislo=='ЕД') {
-                        $adjective1=$morphy->castFormByGramInfo($base_forms[$is+1][0],"П",[$rod,'ЕД','ИМ']);
-                    }
-                    else {
-                        $adjective1=$morphy->castFormByGramInfo($base_forms[$is+1][0],"П",['МН','ИМ']);
-                    }
+                elseif ($partsOfSpeech[$is+1][0]=='П' or $partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ'){
+		    if ($partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ') {
+		     $zalog=array_intersect($f_word[$is+1][0][0]['grammems'],['СТР', 'ДСТ']);
+                     $zalog=reset($zalog);
+		     $vremja=array_intersect($f_word[$is+1][0][0]['grammems'],['ПРШ', 'НСТ']);
+                     $vremja=reset($vremja);
+                     if ($chislo=='ЕД') {
+                        $adjective1=$morphy->castFormByGramInfo($base_forms[$is+1][0],"ПРИЧАСТИЕ",[$rod,'ЕД','ИМ',$zalog,$vremja]);
+                     }
+                     else {
+                        $adjective1=$morphy->castFormByGramInfo($base_forms[$is+1][0],"ПРИЧАСТИЕ",['МН','ИМ',$zalog,$vremja]);
+                     }
 
+		    } else {
+
+                     if ($chislo=='ЕД') {
+                        $adjective1=$morphy->castFormByGramInfo($base_forms[$is+1][0],"П",[$rod,'ЕД','ИМ']);
+                     }
+                     else {
+                        $adjective1=$morphy->castFormByGramInfo($base_forms[$is+1][0],"П",['МН','ИМ']);
+                     }
+		    }
                     $adjective1=$adjective1[0]['form'];
                     if (($is+2)<$totals) {
                         if ($partsOfSpeech[$is+2][0]=='С') {
@@ -327,10 +369,10 @@ for ($is = 0; $is < $totals; $is++) {
             $product=$adjective;
         }        
 
-    $product = mb_strtolower($product, 'UTF-8');
+    $product = mb_convert_case($product, MB_CASE_TITLE, "UTF-8");
 
     //say($product);
-    if ($products=='') $products.=$product; else $products.='. ' . $product;
+    $products.=$product . '.'; 
      
     if($debugEnabled) debmes('Products produkt:'. $product);
                 
@@ -371,7 +413,7 @@ for ($is = 0; $is < $totals; $is++) {
  }
 } 
 
-say('Я добавила в список покупок: ' . $products,2);
+// say('Я добавила в список покупок: ' . $products,2);
 
 function Get_Product_ID($product) {
 $res=SQLSelectOne("select ID from products where TITLE='" . $product . "'");

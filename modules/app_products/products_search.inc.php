@@ -2,14 +2,14 @@
 /*
 * @version 0.2 (wizard)
 */
-	 if(gg('debugEnabled') == 'Producty') $debugEnabled = 1;
+ if(gg('debugEnabled') == 'Producty') $debugEnabled = 1;
 
  global $ajax;
  global $op;
  global $id;
  global $shopping;
 
-sg('ThisComputer.weatherToday',$shopping);
+ sg('ThisComputer.weatherToday',$shopping);
 
  if ($shopping) {
   $out['SHOPPING']=1;
@@ -37,7 +37,7 @@ sg('ThisComputer.weatherToday',$shopping);
    SQLExec("UPDATE products SET QTY=QTY+" . $rec['List_Qty'] . " WHERE ID='".(int)$id."'");
    SQLExec("UPDATE shopping_list_items SET IN_CART=1 WHERE PRODUCT_ID='".(int)$id."'");
    echo "OK";
-   say('Добавлено в корзину '.$rec['TITLE']);
+   //say('Добавлено в корзину '.$rec['TITLE']);
   }
 
   if ($op=='notincart') {

@@ -8,10 +8,9 @@
 
 
 <ul class="nav nav-tabs">
- <li [#if DATA_SOURCE!="products" && DATA_SOURCE!=""#][#else#]class="active"[#endif#]><a href="?data_source=products"><#LANG_PRODUCTS#></a></li>
- <li  [#if DATA_SOURCE=="product_categories"#]class="active"[#endif#]><a href="?data_source=product_categories"><#LANG_CATEGORIES#></a></li>
- <li [#if DATA_SOURCE=="shopping_list_items"#]class="active"[#endif#]><a href="?data_source=shopping_list_items"><#LANG_PRODUCTS#></a></li>
-
+ <li [#if DATA_SOURCE!="products" && DATA_SOURCE!=""#][#else#]class="active"[#endif#]><a href="?data_source=products"><span class="glyphicon glyphicon-list-alt"></span> <#LANG_PRODUCTS#></a></li>
+ <li  [#if DATA_SOURCE=="product_categories"#]class="active"[#endif#]><a href="?data_source=product_categories"><span class="glyphicon glyphicon-inbox"></span> <#LANG_CATEGORIES#></a></li>
+ <li [#if DATA_SOURCE=="shopping_list_items"#]class="active"[#endif#]><a href="?data_source=shopping_list_items"><span class="glyphicon glyphicon-shopping-cart"></span> Корзина</a></li>
 </ul>
 <!-- / source select -->
 [#endif SET_DATASOURCE#]

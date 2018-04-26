@@ -25,6 +25,7 @@
 .counter_m {font-size: 26px; color: #ececec; float: right; position: initial; right: 0; margin-top: -25px;}
 .product_hover:hover {border: 1px solid #ff8912 !important;}
 .crug { border-radius: 50%; }
+h2, .h2 { font-size: 23px; }
 </style>
 &nbsp;
 <form action="?" method="get">
@@ -244,7 +245,7 @@
 <div id="all_categories">
 <div class="mob_body" style="padding: 10px;width: 810px;">
  [#begin CATS#]
- <!--li--><a href="?category_id=[#ID#]"><div class="product_m product_hover mob_body_product" onclick="location.href='?category_id=[#ID#]'"><div class="images_product"><img style="max-height: 50px; max-width: 50px; margin-right: 10px;" src="<#ROOTHTML#>cms/products/image_catproduct_[#ID#].jpg" onError="this.src='<#ROOTHTML#>img/noimg.png'" border="0" alt=""></div><div class="title_m">[#TITLE#]</div><div class="counter_m"> [#TOTAL#]</div>
+ <!--li--><a href="?category_id=[#ID#]"><div class="product_m product_hover mob_body_product" onclick="location.href='?category_id=[#ID#]'"><div class="images_product"><img style="max-height: 50px; max-width: 50px; margin-right: 10px;" src="<#ROOTHTML#>cms/products/image_catproduct_[#ID#].jpg" onError="this.src='<#ROOTHTML#>img/app_products/noimg.png'" border="0" alt=""></div><div class="title_m">[#TITLE#]</div><div class="counter_m"> [#TOTAL#]</div>
  [#if CATS#]<ul>[#tree CATS#]</ul>[#endif CATS#]
  </div></a><!--/li-->
  [#end CATS#]
@@ -254,28 +255,29 @@
 
 
 <div id="category_0">
-<table border="0" cellpadding="5" style="width: 300px;"> 
+<table border="0" cellpadding="5" style="width: 400px;"> 
 [#begin RESULT#]
 [#if NEW_CATEGORY#]
 </table>
 </div>
-<div id="category_[#CATEGORY_ID#]">
-<h1>[#CATEGORY_TITLE#]</h1>
+<div style="padding-bottom: 10px;" id="category_[#CATEGORY_ID#]">
+<h2>[#CATEGORY_TITLE#]</h2>
+<hr>
 <table border="0" cellpadding="5">
 [#endif NEW_CATEGORY#]
 <tr>
 [#if "<#SHOPPING#>"=="1"#]
  <td>
  <div id="product_[#ID#]_ok"[#if IN_CART!="1"#] style="display:none"[#endif#]>
- <a href="#" onClick="return notInCart([#ID#]);"><img src="<#ROOTHTML#>img/btn/ok.png" border="0"></a>
+ <a href="#" onClick="return notInCart([#ID#]);"><img class="crug" src="<#ROOTHTML#>img/btn/ok.png" border="0"></a>
  </div>
  <div id="product_[#ID#]_notok"[#if IN_CART="1"#] style="display:none"[#endif#]>
- <a href="#" onClick="return inCart([#ID#]);"><img src="<#ROOTHTML#>img/btn/notok.png" border="0"></a>
+ <a href="#" onClick="return inCart([#ID#]);"><img class="crug" src="<#ROOTHTML#>img/btn/notok.png" border="0"></a>
  </td>
 [#endif#]
-<td style="text-align:center;">[#if IMAGE!=""#]<img style='max-height:45px; max-width: 26px;' src='/cms/products/[#IMAGE#]'>[#endif#]</td>
- <td  width="85%">
-  <a href="?data_source=products&view_mode=edit_products&id=[#ID#]"><b>[#TITLE#]</b></a>
+ <td width="60px" style="text-align:center;">[#if IMAGE!=""#]<img style='max-height:50px;max-width: 50px;' src='/cms/products/[#IMAGE#]'>[#else#]<img style='max-height:50px;max-width: 50px;' src='/img/app_products/noimg.png'>[#endif#]</td>
+ <td width="400px">
+  [#if "<#SHOPPING#>"!="1"#]<a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_products&id=[#ID#]"><b>[#TITLE#]</b></a>[#else#]<b>[#TITLE#]</b>[#endif#]
   [#if EXPIRE_TERM!="" && QTY!="0"#]
    <div><#LANG_EXPIRE_IN#> [#EXPIRE_TERM#] <#LANG_DAYS#>. [#if EXPIRED#]<b style="color:red"><#LANG_EXPIRED#></b>[#endif EXPIRED#]</div>
   [#endif#]
@@ -284,24 +286,24 @@
   [#endif#]
  </td>
   [#if "<#SHOPPING#>"=="1"#]
-  <td><a href="#" onClick='return changeQty("minus", "[#ID#]", "1")'><img src="<#ROOTHTML#>img/btn/minus.png" border="0"></a></td>
+  <td><a href="#" onClick='return changeQty("minus", "[#ID#]", "1")'><img class="crug" src="<#ROOTHTML#>img/btn/minus.png" border="0"></a></td>
   <td align=center width="5%">
    <span id="product[#ID#]_qty">[#LIST_QTY#] [#ED_IZM#]</span>
    </td>
-   <td><a href="#" onClick='return changeQty("plus", "[#ID#]", "1")'><img src="<#ROOTHTML#>img/btn/plus.png" border="0"></a></td>
+   <td><a href="#" onClick='return changeQty("plus", "[#ID#]", "1")'><img class="crug" src="<#ROOTHTML#>img/btn/plus.png" border="0"></a></td>
   [#else#]
-  <td><a href="#" onClick='return changeQty("minus", "[#ID#]", "0")'><img src="<#ROOTHTML#>img/btn/minus.png" border="0"></a></td>
+  <td><a href="#" onClick='return changeQty("minus", "[#ID#]", "0")'><img class="crug" src="<#ROOTHTML#>img/btn/minus.png" border="0"></a></td>
   <td align=center width="5%">
    <span id="product[#ID#]_qty">[#QTY#]</span>
   </td>
-  <td><a href="#" onClick='return changeQty("plus", "[#ID#]", "0")'><img src="<#ROOTHTML#>img/btn/plus.png" border="0"></a></td>
+  <td><a href="#" onClick='return changeQty("plus", "[#ID#]", "0")'><img class="crug" src="<#ROOTHTML#>img/btn/plus.png" border="0"></a></td>
   [#endif#]
  <td>
  <div id="product_[#ID#]_incart"[#if INCART!="1"#] style="display:none"[#endif#]>
- <a href="#" onClick="return removeFromCart([#ID#]);"><img src="<#ROOTHTML#>img/btn/incart.png" border="0"></a>
+ <a href="#" onClick="return removeFromCart([#ID#]);"><img style="padding-left: 10px;" src="<#ROOTHTML#>img/btn/incart.png" border="0"></a>
  </div>
  <div id="product_[#ID#]_addcart"[#if INCART="1"#] style="display:none"[#endif#]>
- <a href="#" onClick="return addToCart([#ID#]);"><img src="<#ROOTHTML#>img/btn/nocart.png" border="0"></a>
+ <a href="#" onClick="return addToCart([#ID#]);"><img style="padding-left: 10px;" src="<#ROOTHTML#>img/btn/nocart.png" border="0"></a>
  </div>
  </td>
 </tr>

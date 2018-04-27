@@ -110,7 +110,7 @@ $products='';
 $qty=1;
 $ed_izm='';
 
-
+$ed_izm_array=SQLSelect("SELECT ucase(TITLE) as TITLE,SHORT_NAME FROM product_units");
 
 for ($is = 0; $is < $totals; $is++) {
 
@@ -299,6 +299,16 @@ for ($is = 0; $is < $totals; $is++) {
                         $is=$is+1; 
                     } 
                 }
+		if ($is<$totals) {
+                	if ($partsOfSpeech[$is+1][0]=='ПРЕДЛ') {
+                    		$product=$product . ' ' . $words[$is+1];
+				$is++;
+				if ($is<$totals) {
+					$product=$product . ' ' . $words[$is+1];
+                    			$is++;
+				}
+			}
+		}
                 elseif ($partsOfSpeech[$is+1][0]=='П' or $partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ'){
 		    if ($partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ') {
 		     $zalog=array_intersect($f_word[$is+1][0][0]['grammems'],['СТР', 'ДСТ']);

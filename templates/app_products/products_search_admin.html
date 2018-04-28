@@ -19,14 +19,24 @@
   .counter_m {margin-top: -77px !important;}
 
 }
-.product_m {margin: 0 0 10px 10px;border-radius: 5px;padding: 7px 7px 0px 7px;border: 1px solid #d2d2d2;vertical-align: middle;width: 250px;height: 75px;display: inline-block;}
+.product_m {z-index: 999;background-color: #fff;margin: 0 0 10px 10px;border-radius: 5px;padding: 7px 7px 0px 7px;border: 1px solid #d2d2d2;vertical-align: middle;width: 250px;height: 75px;display: inline-block;}
 .images_product {width: 60px;height: 53px;display: inline-block;}
 .title_m {height: 45px;font-size: 17px;display: inline-block;width: 165px; }
 .counter_m {font-size: 26px; color: #ececec; float: right; position: initial; right: 0; margin-top: -25px;}
 .product_hover:hover {border: 1px solid #ff8912 !important;}
 .crug { border-radius: 50%; }
 h2, .h2 { font-size: 23px; }
+.submenu > a > .product_m  {margin: 0; height: 55px; border-radius: 0px; margin-left: -8px;margin-top: -1px;}
+.submenu > a > .product_m:hover  {border: 1px solid #d2d2d2 !important;}
+.submenu > a > .product_m  > .counter_m {margin-top: -35px;font-size: 22px;}
+.submenu > a > .product_m  > .images_product > img {margin-left: 5px;max-height: 40px !important;max-width: 40px !important;}
+.submenu > a > .product_m  > .title_m:hover {color: #ff8912; !important;}
+a:hover, a:focus {
+    color: #2a6496;
+    text-decoration: none;
+}
 </style>
+
 &nbsp;
 <form action="?" method="get">
 <table border="0" align="center">
@@ -237,17 +247,33 @@ h2, .h2 { font-size: 23px; }
   return false;
  }
 
-
 </script>
 
+
 <!-- search results (list) -->
+
 [#if CATS#]
 <div id="all_categories">
 <div class="mob_body" style="padding: 10px;width: 810px;">
  [#begin CATS#]
- <!--li--><a href="?category_id=[#ID#]"><div class="product_m product_hover mob_body_product" onclick="location.href='?category_id=[#ID#]'"><div class="images_product"><img style="max-height: 50px; max-width: 50px; margin-right: 10px;" src="<#ROOTHTML#>cms/products/image_catproduct_[#ID#].jpg" onError="this.src='<#ROOTHTML#>img/app_products/noimg.png'" border="0" alt=""></div><div class="title_m">[#TITLE#]</div><div class="counter_m"> [#TOTAL#]</div>
- [#if CATS#]<ul>[#tree CATS#]</ul>[#endif CATS#]
- </div></a><!--/li-->
+ <script>
+jQuery(document).ready(function($) {
+    $('#menu[#ID#]').mouseenter(function() {
+        $(this).parent().parent().find('div.sb[#ID#]').show();
+    });
+	$('#menu[#ID#]').mouseleave(function() {
+        $(this).parent().parent().find('div.sb[#ID#]').hide();
+    });
+});
+</script>
+<a href="?category_id=[#ID#]">
+    <div id="menu[#ID#]" class="product_m product_hover mob_body_product" onclick="location.href='?category_id=[#ID#]'">
+        <div class="images_product"><img style="max-height: 50px; max-width: 50px; margin-right: 10px;" src="<#ROOTHTML#>cms/products/image_catproduct_[#ID#].jpg" onError="this.src='<#ROOTHTML#>img/app_products/noimg.png'" border="0" alt=""></div>
+        <div class="title_m">[#TITLE#]</div>
+        <div class="counter_m"> [#TOTAL#]</div>
+		[#if CATS#]<div class="submenu sb[#ID#]" style="padding-top: 6px;display: none;width: 300px; position: absolute;">[#tree CATS#]</div>[#endif CATS#]
+	</div>
+</a>
  [#end CATS#]
 </div>
 </div>

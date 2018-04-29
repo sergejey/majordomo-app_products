@@ -118,15 +118,16 @@ for ($is = 0; $is < $totals; $is++) {
         
         $qty=(int)$words[$is];
         if (($is+1)<$totals) {
-            if (in_array($base_forms[$is+1][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН','ЛИТР'))) {         
-                $ed_izm=mb_strtolower($base_forms[$is+1][0]);
-                $is++;
-            
+            $ed_izm_ind=array_search($base_forms[$is+1][0],array_column($ed_izm_array, 'TITLE'));
+            if (false!==$ed_izm_ind) {         
+             $ed_izm=$ed_izm_array[$ed_izm_ind]['SHORT_NAME'];
+             $is++;
             }
         }
     }
-    elseif (in_array($base_forms[$is][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН','ЛИТР'))) { 
-        $ed_izm=mb_strtolower($base_forms[$is][0]);
+    elseif (in_array($base_forms[$is][0],array_column($ed_izm_array, 'TITLE'))) { 
+	$ed_izm_ind=array_search($base_forms[$is][0],array_column($ed_izm_array, 'TITLE'));
+        $ed_izm=$ed_izm_array[$ed_izm_ind]['SHORT_NAME'];
             
     }
     else {
@@ -287,7 +288,7 @@ for ($is = 0; $is < $totals; $is++) {
                         $noun=$noun[0]['form'];
 
                         $product=$adjective .' ' . $noun ;
-                        $is=$is+1; 
+			$is++; 
                     }
                     else {
                         if (preg_match('/([a-zA-Z])/',$words[$is+1])) $noun=$words[$is+1];
@@ -298,17 +299,17 @@ for ($is = 0; $is < $totals; $is++) {
                         $product=$adjective .' ' . $noun ;
                         $is=$is+1; 
                     } 
-                }
-		if ($is<$totals) {
-                	if ($partsOfSpeech[$is+1][0]=='ПРЕДЛ') {
-                    		$product=$product . ' ' . $words[$is+1];
-				$is++;
-				if ($is<$totals) {
-					$product=$product . ' ' . $words[$is+1];
-                    			$is++;
+		    if ($is<$totals) {
+                		if ($partsOfSpeech[$is+1][0]=='ПРЕДЛ') {
+                    			$product=$product . ' ' . $words[$is+1];
+					$is++;
+					if ($is<$totals) {
+						$product=$product . ' ' . $words[$is+1];
+                    				$is++;
+					}
 				}
-			}
-		}
+		    }
+                }
                 elseif ($partsOfSpeech[$is+1][0]=='П' or $partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ'){
 		    if ($partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ') {
 		     $zalog=array_intersect($f_word[$is+1][0][0]['grammems'],['СТР', 'ДСТ']);
@@ -423,7 +424,7 @@ for ($is = 0; $is < $totals; $is++) {
  }
 } 
 
-// say('Я добавила в список покупок: ' . $products,2);
+say('Я добавила в список покупок: ' . $products,2);
 
 function Get_Product_ID($product) {
 $res=SQLSelectOne("select ID from products where TITLE='" . $product . "'");

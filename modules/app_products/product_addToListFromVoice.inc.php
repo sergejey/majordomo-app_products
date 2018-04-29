@@ -382,7 +382,6 @@ for ($is = 0; $is < $totals; $is++) {
 
     $product = mb_convert_case($product, MB_CASE_TITLE, "UTF-8");
 
-    //say($product);
     $products.=$product . '.'; 
      
     if($debugEnabled) debmes('Products produkt:'. $product);
@@ -401,19 +400,19 @@ for ($is = 0; $is < $totals; $is++) {
         } 
         Else {
             if($debugEnabled) debmes('Products creating unknown');
-               $Record = Array();
-               $Record['TITLE'] = "Неотсортированные";
-               $Record['ID']=SQLInsert('product_categories', $Record);
+            $Record = Array();
+            $Record['TITLE'] = "Неотсортированные";
+            $Record['ID']=SQLInsert('product_categories', $Record);
             $category_id = $Record['ID'];
                             
             if($debugEnabled) debmes('Products produkt '.$product.' adding to created unknown');
         }
 
-           $Record = Array();
-           $Record['TITLE'] = $product;
-          $Record['CATEGORY_ID'] = $category_id;
-          $Record['QTY'] = 1;
-           $Record['ID']=SQLInsert('products', $Record);
+        $Record = Array();
+        $Record['TITLE'] = $product;
+        $Record['CATEGORY_ID'] = $category_id;
+        $Record['QTY'] = 1;
+        $Record['ID']=SQLInsert('products', $Record);
         $id = $Record['ID'];
 
         addToListQty($id,$qty,$ed_izm);

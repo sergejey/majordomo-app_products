@@ -9,36 +9,7 @@
 [#if RESULT#]
 <!-- search results (list) -->
 <form action="?" method="post" name="frmList_shopping_list_items" style="padding:0px">
-<table border=0 cellpadding=5 cellspacing=1 align=center>
-[#begin RESULT#]
-<tr>
- <td
-  >
-  <b>
-   [#TITLE#]
-  </a></b>
- </td>
- <td
-   align=center
-  >
-  [#if PRICE!=""#]
-   [#PRICE#]
-  [#else#]
-   &nbsp;
-  [#endif#]
- </td>
- <td>
-  <table border=0>
-  [#if "<#ACTION#>"=="admin"#]
-   <td align=center>
-    <a href="?data_source=<#DATA_SOURCE#>&view_mode=delete_shopping_list_items&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')"><#LANG_DELETE#></a>
-   </td>
-  [#endif ACTION#]
-  </table>
- </td>
-</tr>
-[#end RESULT#]
-</table>
+
 <input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
 <input type="hidden" name="view_mode" value="multiple_shopping_list_items">
 </form>
@@ -48,3 +19,61 @@
 [#endif RESULT#]
 <!-- / results -->
 </td></tr></table>
+
+<h4 style="color:Red;">Список покупок</h4>
+<table border="0" width="80%">
+ [#if NOT_IN_CART#]
+ [#begin NOT_IN_CART#]
+ <tr>
+  <td width="2%"><input type="checkbox" name="cart[#ID#]" class="tasks" value="[#ID#]" data-role="none"></td>
+  <td width="90%" align="left""><span id="task_title[#ID#]">[#TITLE#]</span> ([#List_Qty#] [#Ed_Izm#])</td>
+
+  [#if "<#ACTION#>"=="admin"#]
+   <td align=center>
+    <a href="?data_source=<#DATA_SOURCE#>&view_mode=delete_shopping_list_items&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')"><#LANG_DELETE#></a>
+   </td>
+  [#endif ACTION#]
+
+ </tr>
+ [#end NOT_IN_CART#]
+</table>
+[#endif NOT_IN_CART#]
+
+
+[#if IN_CART#]
+<h4 style="color:Red;">Куплено</h4>
+<table border="0" >
+ [#begin IN_CART#]
+ <tr>
+   <td><input type="checkbox" name="cart[#ID#]" class="tasks" value="[#ID#]" checked data-role="none"></td>
+   <td width="90%"><span id="task_title[#ID#]" style="text-decoration:line-through">[#TITLE#]</span></td>
+
+  [#if "<#ACTION#>"=="admin"#]
+   <td align=center>
+    <a href="?data_source=<#DATA_SOURCE#>&view_mode=delete_shopping_list_items&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')"><#LANG_DELETE#></a>
+   </td>
+  [#endif ACTION#]
+
+ </tr>
+ [#end IN_CART#]
+</table>
+[#endif IN_CART#]
+
+
+<script language="javascript">
+ $('.tasks').click (function ()
+  {
+  var thisCheck = $(this);
+  if (thisCheck.is(':checked')) {
+   $('#task_title'+thisCheck.val()).css('text-decoration', 'line-through');
+   var url="?data_source=<#DATA_SOURCE#>&mode=is_incart&id=";
+   window.location=url+thisCheck.val();
+  } else {
+   $('#task_title'+thisCheck.val()).css('text-decoration','none');
+   var url="?data_source=<#DATA_SOURCE#>&mode=reset_incart&id=";
+   window.location=url+thisCheck.val();
+  }
+ }
+ );
+</script>
+

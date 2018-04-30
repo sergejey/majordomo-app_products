@@ -48,8 +48,18 @@
  <label class="col-lg-3 control-label"[#if ERR_PRIORITY#] style="color:red;font-weight:bold"[#endif#]>
  <#LANG_IMAGE#>:
  </label>
- <div class="col-lg-4">[#if CAT_IMG!=""#]<img src="<#ROOTHTML#>cms/products/image_catproduct_<#ID#>.jpg" border="0" height="50"><br>[#endif#]<input type="file" class="form-control" name="cat_img" ><br></div>
+
+<div class="col-lg-4">[#if IMAGE!=""#]
+<img src="<#ROOTHTML#>cms/products/<#IMAGE#>" border="0" height="50"><br>
+<input type="checkbox" name="delete_image" value="1"> delete<br>
+[#endif IMAGE#]
 </div>
+</div>
+
+<div class="form-group">
+ <label class="col-lg-3 control-label"[#if ERR_PRIORITY#] style="color:red;font-weight:bold"[#endif#]>
+Upload: </label><div class="col-lg-4"><input type="file" name="image"></div></div><br>
+
 
 <div class="form-group">
         <div class="col-lg-offset-3 col-lg-4">

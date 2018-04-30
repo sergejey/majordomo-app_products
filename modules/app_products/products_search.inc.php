@@ -2,14 +2,13 @@
 /*
 * @version 0.2 (wizard)
 */
- if(gg('debugEnabled') == 'Producty') $debugEnabled = 1;
+	 if(gg('debugEnabled') == 'Producty') $debugEnabled = 1;
 
  global $ajax;
  global $op;
  global $id;
  global $shopping;
 
- sg('ThisComputer.weatherToday',$shopping);
 
  if ($shopping) {
   $out['SHOPPING']=1;
@@ -37,7 +36,7 @@
    SQLExec("UPDATE products SET QTY=QTY+" . $rec['List_Qty'] . " WHERE ID='".(int)$id."'");
    SQLExec("UPDATE shopping_list_items SET IN_CART=1 WHERE PRODUCT_ID='".(int)$id."'");
    echo "OK";
-   //say('Добавлено в корзину '.$rec['TITLE']);
+   say('Добавлено в корзину '.$rec['TITLE']);
   }
 
   if ($op=='notincart') {
@@ -477,7 +476,7 @@
   }
 
   if ($qry=="1" && !$out['ALL']) {
-   $cats=SQLSelect("SELECT ID, PARENT_ID, TITLE FROM product_categories WHERE 1 ORDER BY ID,  TITLE");
+   $cats=SQLSelect("SELECT ID, PARENT_ID, TITLE,IMAGE FROM product_categories WHERE 1 ORDER BY PRIORITY desc");
    $total=count($cats);
    for($i=0;$i<$total;$i++) {
     $cats[$i]['TOTAL']=current(SQLSelectOne("SELECT COUNT(*) as TOTAL FROM products WHERE CATEGORY_ID='".$cats[$i]['ID']."'"));
@@ -486,7 +485,7 @@
    $out['CATS']=$cats;
   }
 
-  $out['CATEGORIES']=SQLSelect("SELECT ID, TITLE FROM product_categories ORDER BY PARENT_ID, ID, TITLE");
+  $out['CATEGORIES']=SQLSelect("SELECT ID, TITLE FROM product_categories ORDER BY PARENT_ID, PRIORITY");
 
   if ($category_id) {
    $total=count($out['CATEGORIES']);

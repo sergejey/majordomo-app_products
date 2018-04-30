@@ -129,12 +129,14 @@ function run() {
 * @access public
 */
 function admin(&$out) {
+
+  
  if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
   $out['SET_DATASOURCE']=1;
  }
  if ($this->data_source=='products' || $this->data_source=='') {
   if ($this->view_mode=='' || $this->view_mode=='search_products') {
-   $this->search_products($out);
+    $this->search_products($out);
   }
   if ($this->view_mode=='edit_products') {
    $this->edit_products($out, $this->id);
@@ -159,12 +161,49 @@ function admin(&$out) {
    $this->redirect("?data_source=product_categories");
   }
  }
+
+if ($this->data_source=='product_units') {
+  if ($this->view_mode=='' || $this->view_mode=='search_product_units') {
+   $this->search_product_units($out);
+  }
+  if ($this->view_mode=='edit_product_units') {
+   $this->edit_product_units($out, $this->id);
+  }
+  if ($this->view_mode=='delete_product_units') {
+   $this->delete_product_units($this->id);
+   $this->redirect("?data_source=product_units");
+  }
+ }
+
  if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
   $out['SET_DATASOURCE']=1;
  }
  if ($this->data_source=='shopping_list_items') {
   if ($this->view_mode=='' || $this->view_mode=='search_shopping_list_items') {
-   $this->search_shopping_list_items($out);
+
+   if ($this->mode=='is_incart') {
+    global $id;
+
+    $rec=SQLSelectOne("SELECT * FROM shopping_list_items WHERE ID='".(int)$id."'");
+    $rec['IN_CART']=1;
+    SQLUpdate('shopping_list_items', $rec);
+
+    $this->redirect("?data_source=shopping_list_items");
+   }
+
+   if ($this->mode=='reset_incart') {
+    global $id;
+
+    $rec=SQLSelectOne("SELECT * FROM shopping_list_items WHERE ID='".(int)$id."'");
+    $rec['IN_CART']=0;
+    SQLUpdate('shopping_list_items', $rec);
+
+    $this->redirect("?data_source=shopping_list_items");
+   }
+
+   if ($this->mode=='') {
+    $this->search_shopping_list_items($out);
+   }
   }
   if ($this->view_mode=='delete_shopping_list_items') {
    $this->delete_shopping_list_items($this->id);
@@ -352,7 +391,7 @@ function usual(&$out) {
    $parent_list=array();
   }
   $sub_list=array();
-  $res=SQLSelect("SELECT * FROM $table WHERE PARENT_ID='$parent_id'");
+  $res=SQLSelect("SELECT * FROM $table WHERE PARENT_ID='$parent_id' order by PRIORITY desc");
   $total=count($res);
   for($i=0;$i<$total;$i++) {
    if ($parent_list[0]) {
@@ -392,6 +431,30 @@ function usual(&$out) {
   // some action for related tables
   SQLExec("DELETE FROM shopping_list_items WHERE ID='".$rec['ID']."'");
  }
+
+
+/**
+* product_units search
+*
+* @access public
+*/
+ function search_product_units(&$out) {
+  require(DIR_MODULES.$this->name.'/product_units_search.inc.php');
+ }
+/**
+* shopping_list_items delete record
+*
+* @access public
+*/
+ function delete_product_units($id) {
+  SQLExec("DELETE FROM product_units WHERE ID='$id'");
+
+ }
+
+function edit_product_units(&$out, $id) {
+  require(DIR_MODULES.$this->name.'/product_units_edit.inc.php');
+ }
+
 /**
 * Install
 *
@@ -451,8 +514,13 @@ shopping_list_items - Shopping List
  product_categories: TITLE varchar(255) NOT NULL DEFAULT ''
  product_categories: PRIORITY int(10) NOT NULL DEFAULT '0'
  product_categories: PARENT_ID int(10) NOT NULL DEFAULT '0'
+ product_categories: IMAGE varchar(70) NOT NULL DEFAULT ''
  product_categories: SUB_LIST text
  product_categories: PARENT_LIST text
+
+ product_units: ID int(10) unsigned NOT NULL auto_increment
+ product_units: TITLE varchar(25) NOT NULL DEFAULT ''
+ product_units: SHORT_NAME varchar(25) NOT NULL DEFAULT ''
 
  shopping_list_items: ID int(10) unsigned NOT NULL auto_increment
  shopping_list_items: TITLE varchar(255) NOT NULL DEFAULT ''

@@ -216,7 +216,7 @@ for ($is = 0; $is < $totals; $is++) {
                         if (preg_match('/([a-zA-Z])/',$words[$is]) or in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) $noun=$words[$is];
                         else {
                             if ($chislo=='ЕД') {
-                                $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$rod,'ЕД','ИМ']);
+                                $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$rod1,'ЕД','ИМ']);
                             }
                             else {
                                 $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$chislo,'ИМ']);

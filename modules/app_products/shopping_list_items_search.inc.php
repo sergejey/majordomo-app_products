@@ -53,4 +53,15 @@
    }
    $out['RESULT']=$res;
   }
+
+  $not_in_cart=SQLSelect("SELECT * FROM shopping_list_items WHERE IN_CART=0 ORDER BY $sortby");
+  if ($not_in_cart[0]['ID']) {
+    $out['NOT_IN_CART']=$not_in_cart;
+  }
+
+  $in_cart=SQLSelect("SELECT * FROM shopping_list_items WHERE IN_CART=1 ORDER BY $sortby");
+  if ($in_cart[0]['ID']) {
+    $out['IN_CART']=$in_cart;
+  }
+
 ?>

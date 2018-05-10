@@ -252,31 +252,53 @@ a:hover, a:focus {
 
 <!-- search results (list) -->
 
+<style>
+
+.category {align: left;list-style: none;margin-left: 20px; }
+.category li {
+    border:1px solid #d2d2d2;
+    border-radius: 5px;
+    color: blue;
+    padding: 3px;
+    width: 300px;
+    height:55px;
+    margin:5px;
+    display: inline-block;
+}
+.category span {
+color: black;
+text-align: right;
+float: right;
+font-size: 26px; 
+color: #ececec;
+}
+
+.category img {max-width: 50px;max-height: 50px;padding: 1px;margin-top: 1px;float: left;}
+
+.category a {
+ margin-left: 5px;
+ vertical-align: 25px;
+ text-align: left;height: 45px;font-size: 17px;width: 165px;
+ }
+
+</style>
+
+
+
+<!-- search results (list) -->
 [#if CATS#]
-<div id="all_categories">
-<div class="mob_body" style="padding: 10px;width: 810px;">
+
+<ul class="category">
  [#begin CATS#]
- <script>
-jQuery(document).ready(function($) {
-    $('#menu[#ID#]').mouseenter(function() {
-        $(this).parent().parent().find('div.sb[#ID#]').show();
-    });
-	$('#menu[#ID#]').mouseleave(function() {
-        $(this).parent().parent().find('div.sb[#ID#]').hide();
-    });
-});
-</script>
-<a href="?category_id=[#ID#]">
-    <div id="menu[#ID#]" class="product_m product_hover mob_body_product" onclick="location.href='?category_id=[#ID#]'">
-        <div class="images_product"><img style="max-height: 50px; max-width: 50px; margin-right: 10px;" src="<#ROOTHTML#>cms/products/image_catproduct_[#ID#].jpg" onError="this.src='<#ROOTHTML#>img/app_products/noimg.png'" border="0" alt=""></div>
-        <div class="title_m">[#TITLE#]</div>
-        <div class="counter_m"> [#TOTAL#]</div>
-		[#if CATS#]<div class="submenu sb[#ID#]" style="padding-top: 6px;display: none;width: 300px; position: absolute;">[#tree CATS#]</div>[#endif CATS#]
-	</div>
-</a>
+ <li>
+  [#if IMAGE!=""#]<img src="<#ROOTHTML#>cms/products/[#IMAGE#]" border="0" alt="">[#endif IMAGE#]
+  <a href="?category_id=[#ID#]">[#TITLE#]</a>[#if TOTAL!="0"#] <span>[#TOTAL#]</span>[#endif#]</li>
+  [#if CATS#]<ul class="category">[#tree CATS#]</ul>[#endif CATS#]
+  
+ 
  [#end CATS#]
-</div>
-</div>
+</ul>
+
 [#else CATS#]
 
 

@@ -64,17 +64,37 @@ Upload: <input type="file" name="image">
 </td>
 </tr>
 <!-- EXPIRE_DATE (date) -->
+
 <tr>
  <td align=right>
  [#if ERR_EXPIRE_DATE#]<b><font color="red">[#endif#]
  <#LANG_EXPIRATION_DATE#>:
  </td>
  <td>
-  <input type="text" name="expire_date" value="[#EXPIRE_DATE#]" maxlength=10 size=12>
-  [#module name="dateselect" field="expire_date" form="frmEdit"#]
+  <input type="date" id="expire_date" name="expire_date" value="[#EXPIRE_DATE#]" data-role="none">
+ 
  </td>
 </tr>
 <!-- EXPIRE_DEFAULT (int) -->
+
+<script language="javascript">
+ $('#expire_date').DatePicker({
+        format:'Y-m-d',
+        date: $('#expire_date').val(),
+        current: $('#expire_date').val(),
+        starts: 1,
+        position: 'r',
+        onBeforeShow: function(){
+                $('#expire_date').DatePickerSetDate($('#expire_date').val(), true);
+        },
+        onChange: function(formated, dates){
+                $('#expire_date').val(formated);
+                $('#expire_date').DatePickerHide();
+        }
+}
+);
+</script>
+
 <tr>
  <td align=right>
  [#if ERR_EXPIRE_DEFAULT#]<b><font color="red">[#endif#]

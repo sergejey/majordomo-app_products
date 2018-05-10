@@ -118,15 +118,16 @@ for ($is = 0; $is < $totals; $is++) {
         
         $qty=(int)$words[$is];
         if (($is+1)<$totals) {
-            if (in_array($base_forms[$is+1][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН','ЛИТР'))) {         
-                $ed_izm=mb_strtolower($base_forms[$is+1][0]);
-                $is++;
-            
+            $ed_izm_ind=array_search($base_forms[$is+1][0],array_column($ed_izm_array, 'TITLE'));
+            if (false!==$ed_izm_ind) {         
+             $ed_izm=$ed_izm_array[$ed_izm_ind]['SHORT_NAME'];
+             $is++;
             }
         }
     }
-    elseif (in_array($base_forms[$is][0],array('БУТЫЛКА','ПАЧКА','ШТУКА','УПАКОВКА','ГРАММ','КИЛОГРАММ','РУЛОН','ЛИТР'))) { 
-        $ed_izm=mb_strtolower($base_forms[$is][0]);
+    elseif (in_array($base_forms[$is][0],array_column($ed_izm_array, 'TITLE'))) { 
+	$ed_izm_ind=array_search($base_forms[$is][0],array_column($ed_izm_array, 'TITLE'));
+        $ed_izm=$ed_izm_array[$ed_izm_ind]['SHORT_NAME'];
             
     }
     else {
@@ -215,7 +216,7 @@ for ($is = 0; $is < $totals; $is++) {
                         if (preg_match('/([a-zA-Z])/',$words[$is]) or in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) $noun=$words[$is];
                         else {
                             if ($chislo=='ЕД') {
-                                $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$rod,'ЕД','ИМ']);
+                                $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$rod1,'ЕД','ИМ']);
                             }
                             else {
                                 $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$chislo,'ИМ']);
@@ -287,7 +288,7 @@ for ($is = 0; $is < $totals; $is++) {
                         $noun=$noun[0]['form'];
 
                         $product=$adjective .' ' . $noun ;
-                        $is=$is+1; 
+			$is++; 
                     }
                     else {
                         if (preg_match('/([a-zA-Z])/',$words[$is+1])) $noun=$words[$is+1];
@@ -298,17 +299,17 @@ for ($is = 0; $is < $totals; $is++) {
                         $product=$adjective .' ' . $noun ;
                         $is=$is+1; 
                     } 
-                }
-		if ($is<$totals) {
-                	if ($partsOfSpeech[$is+1][0]=='ПРЕДЛ') {
-                    		$product=$product . ' ' . $words[$is+1];
-				$is++;
-				if ($is<$totals) {
-					$product=$product . ' ' . $words[$is+1];
-                    			$is++;
+		    if ($is<$totals) {
+                		if ($partsOfSpeech[$is+1][0]=='ПРЕДЛ') {
+                    			$product=$product . ' ' . $words[$is+1];
+					$is++;
+					if ($is<$totals) {
+						$product=$product . ' ' . $words[$is+1];
+                    				$is++;
+					}
 				}
-			}
-		}
+		    }
+                }
                 elseif ($partsOfSpeech[$is+1][0]=='П' or $partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ'){
 		    if ($partsOfSpeech[$is+1][0]=='ПРИЧАСТИЕ') {
 		     $zalog=array_intersect($f_word[$is+1][0][0]['grammems'],['СТР', 'ДСТ']);
@@ -381,7 +382,6 @@ for ($is = 0; $is < $totals; $is++) {
 
     $product = mb_convert_case($product, MB_CASE_TITLE, "UTF-8");
 
-    //say($product);
     $products.=$product . '.'; 
      
     if($debugEnabled) debmes('Products produkt:'. $product);
@@ -400,19 +400,19 @@ for ($is = 0; $is < $totals; $is++) {
         } 
         Else {
             if($debugEnabled) debmes('Products creating unknown');
-               $Record = Array();
-               $Record['TITLE'] = "Неотсортированные";
-               $Record['ID']=SQLInsert('product_categories', $Record);
+            $Record = Array();
+            $Record['TITLE'] = "Неотсортированные";
+            $Record['ID']=SQLInsert('product_categories', $Record);
             $category_id = $Record['ID'];
                             
             if($debugEnabled) debmes('Products produkt '.$product.' adding to created unknown');
         }
 
-           $Record = Array();
-           $Record['TITLE'] = $product;
-          $Record['CATEGORY_ID'] = $category_id;
-          $Record['QTY'] = 1;
-           $Record['ID']=SQLInsert('products', $Record);
+        $Record = Array();
+        $Record['TITLE'] = $product;
+        $Record['CATEGORY_ID'] = $category_id;
+        $Record['QTY'] = 1;
+        $Record['ID']=SQLInsert('products', $Record);
         $id = $Record['ID'];
 
         addToListQty($id,$qty,$ed_izm);
@@ -423,7 +423,7 @@ for ($is = 0; $is < $totals; $is++) {
  }
 } 
 
-// say('Я добавила в список покупок: ' . $products,2);
+say('Я добавила в список покупок: ' . $products,2);
 
 function Get_Product_ID($product) {
 $res=SQLSelectOne("select ID from products where TITLE='" . $product . "'");

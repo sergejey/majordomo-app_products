@@ -37,13 +37,31 @@
      $new_rec=1;
      $rec['ID']=SQLInsert($table_name, $rec); // adding new record
     }
-	global $cat_img;
-	if ($cat_img!='') {
-		if ($out['CAT_IMG']!='') {
-		 @unlink(ROOT.'cms/products/image_catproduct_'.$out['CAT_IMG'].'.jpg');
-		}
-		copy($cat_img, ROOT.'cms/products/image_catproduct_'.$rec['ID'].'.jpg');
-	} 
+   //updating 'IMAGE' (image)
+   global $image;
+   global $image_name;
+   global $delete_image;
+   if ($image!="" && file_exists($image) && (!$delete_image)) {
+     $filename=strtolower(basename($image_name));
+     $ext=strtolower(end(explode(".",basename($image_name))));
+     if (
+         (filesize($image)<=(0*1024) || 0==0) && (Is_Integer(strpos('gif jpg png', $ext)))
+        ) {
+           $filename=$rec["ID"]."_image_".time().".".$ext;
+           if ($rec["IMAGE"]!='') {
+            @Unlink(ROOT.'./cms/products//'.$rec["IMAGE"]);
+           }
+           Copy($image, ROOT.'./cms/products//'.$filename);
+           $rec["IMAGE"]=$filename;
+           SQLUpdate($table_name, $rec);
+          }
+   } elseif ($delete_image) {
+      @Unlink(ROOT.'./cms/products//'.$rec["IMAGE"]);
+      $rec["IMAGE"]='';
+      SQLUpdate($table_name, $rec);
+   }
+
+
     $this->updateTree_product_categories();
     $out['OK']=1;
    } else {

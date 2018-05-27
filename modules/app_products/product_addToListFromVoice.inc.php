@@ -86,7 +86,7 @@ for ($is = 0; $is < $totals; $is++) {
                 // Из нескольких форм существительного выбираем ту, которая в именительном или винительном падеже
                 $padezh=array_intersect($f_word[$is][0][0]['grammems'],['ИМ', 'РД', 'ДТ', 'ВН', 'ТВ', 'ПР', 'ЗВ']);
                 $padezh=reset($padezh);
-                if ($padezh!='ИМ' and $padezh!='ВН') {
+                if ($padezh!='ИМ' and $padezh!='ВН' or in_array('ДФСТ',$f_word[$is][0][0]['grammems'])) {
                     $base_forms[$is][0]=$base_forms[$is][1];
                     $chislo=array_intersect($f_word[$is][1][0]['grammems'],['ЕД', 'МН']);
                     $chislo=reset($chislo);
@@ -231,6 +231,10 @@ for ($is = 0; $is < $totals; $is++) {
             else {
                 if (preg_match('/([a-zA-Z])/',$words[$is]) or in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) $noun=$words[$is];
                 else {
+                 if (Get_Product_ID($base_forms[$is][0])>0) {
+                  $noun=$base_forms[$is][0];
+                 }
+                 else {
                     if ($chislo=='ЕД') {
                         $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$chislo,$rod1,'ИМ']);
                     }
@@ -238,6 +242,7 @@ for ($is = 0; $is < $totals; $is++) {
                         $noun=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$chislo,'ИМ']);
                     }
                     $noun=$noun[0]['form'];
+                  }
                 }
                 $product=$noun;
             }

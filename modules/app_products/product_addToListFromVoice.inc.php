@@ -59,6 +59,18 @@ for ($is = 0; $is < $totals; $is++) {
             }
         }
         if ( count($partsOfSpeech[$is])==2) {
+	    if ($f_word[$is][0][0]['pos']=="КР_ПРИЛ" and $partsOfSpeech[$is][1]=="С" ) {
+		// Если слово может быть и кратким прилагательным и существительным - выбираем
+		// существительное. Пример - печенька
+                $partsOfSpeech[$is][0]="С";
+                $f_word[$is][0][0]['pos']="С";
+                $chislo=array_intersect($f_word[$is][1][0]['grammems'],['ЕД', 'МН']);
+                $chislo=reset($chislo);
+                $rod=array_intersect($f_word[$is][1][0]['grammems'],['МР', 'ЖР', 'СР']);
+                $rod=reset($rod);
+                $f_word[$is][0][0]['grammems'][0]=$chislo;
+                $f_word[$is][0][0]['grammems'][1]=$rod;
+            }
             if ($partsOfSpeech[$is][0]=="С" and $partsOfSpeech[$is][1]=="П" and !in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) {
                 // Если слово может быть и существительным и прилагательным, выбираем прилагательное. Пример - красный
                 $partsOfSpeech[$is][0]="П";

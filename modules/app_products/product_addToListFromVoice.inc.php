@@ -71,7 +71,7 @@ for ($is = 0; $is < $totals; $is++) {
                 $f_word[$is][0][0]['grammems'][0]=$chislo;
                 $f_word[$is][0][0]['grammems'][1]=$rod;
             }
-            if ($partsOfSpeech[$is][0]=="С" and $partsOfSpeech[$is][1]=="П" and !in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) {
+            if ($Word!='ПИВО' and $partsOfSpeech[$is][0]=="С" and $partsOfSpeech[$is][1]=="П" and !in_array('ИМЯ',$f_word[$is][0][0]['grammems'])) {
                 // Если слово может быть и существительным и прилагательным, выбираем прилагательное. Пример - красный
                 $partsOfSpeech[$is][0]="П";
                 $chislo=array_intersect($f_word[$is][1][0]['grammems'],['ЕД', 'МН']);
@@ -169,6 +169,18 @@ for ($is = 0; $is < $totals; $is++) {
                             else $product=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$chislo,'ИМ']);
                             $product=$product[0]['form'];
                         }
+			for ($j=$totals;$j>$is;$j-- ) {
+			    $temp_product=$product;
+			    for ($k=$is+1;$k<$j;$k++) {
+			        $temp_product.= ' ' . $words[$k];
+			    }
+			    if (Get_Product_ID($temp_product)>0) {
+			        $product=$temp_product;
+				$is=$j+1;
+				break;
+			    }
+			}
+
                     }
                 }
                 elseif ($partsOfSpeech[$is+1][0]=='ПРЕДЛ') {
@@ -220,7 +232,7 @@ for ($is = 0; $is < $totals; $is++) {
                         }
                         $noun=$noun[0]['form'];
                     }
-                    if (Get_Product_ID($adjective . " " . $noun)>0) {
+                    if (!empty($adjective) and !empty($noun) and Get_Product_ID($adjective . " " . $noun)>0) {
                         $product=$adjective . " " . $noun;
                         $is=$is+1;
                     }

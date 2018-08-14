@@ -17,6 +17,7 @@ try {
     } catch (phpMorphy_Exception $e) {
             die('Error occured while creating phpMorphy instance: ' . PHP_EOL . $e);
 }
+$command=str_replace(' и ',' ',$command);
 $words = explode(' ', $command);
 $base_forms = array();
 $partsOfSpeech=array();

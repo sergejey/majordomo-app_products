@@ -170,7 +170,7 @@ for ($is = 0; $is < $totals; $is++) {
                             else $product=$morphy->castFormByGramInfo($base_forms[$is][0],'С',[$chislo,'ИМ']);
                             $product=$product[0]['form'];
                         }
-			for ($j=$totals;$j>$is;$j-- ) {
+			for ($j=$totals;$j>$is+1;$j-- ) {
 			    $temp_product=$product;
 			    for ($k=$is+1;$k<$j;$k++) {
 			        $temp_product.= ' ' . $words[$k];

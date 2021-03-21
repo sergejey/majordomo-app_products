@@ -161,11 +161,11 @@ a:hover, a:focus {
 <hr size="1">
 
 <ul class="nav nav-tabs">
- <li [#if CATS#]class="active"[#endif#]><a href="?"><img src="/img/app_products/categories.png"><#LANG_CATEGORIES#></a></li>
- <li [#if ALL!=""#]class="active"[#endif#]><a href="?all=1"><img src="/img/app_products/all.png"><#LANG_ALL_PRODUCTS#></a></li>
- <li [#if EXPIRED!=""#]class="active"[#endif#]><a href="?expired=1"><img src="/img/app_products/expired.png"><#LANG_EXPIRED#></a></li>
- <li [#if MISSING!=""#]class="active"[#endif#]><a href="?missing=1"><img src="/img/app_products/missing.png"><#LANG_MISSING#></a></li>
- <li [#if SHOPPING!=""#]class="active"[#endif#]><a href="?shopping=1"><img src="/img/app_products/wallet.png"><#LANG_SHOPPING_LIST#></a></li>
+ <li [#if CATS#]class="active"[#endif#]><a href="?"><img src="<#ROOTHTML#>img/app_products/categories.png"><#LANG_CATEGORIES#></a></li>
+ <li [#if ALL!=""#]class="active"[#endif#]><a href="?all=1"><img src="<#ROOTHTML#>img/app_products/all.png"><#LANG_ALL_PRODUCTS#></a></li>
+ <li [#if EXPIRED!=""#]class="active"[#endif#]><a href="?expired=1"><img src="<#ROOTHTML#>img/app_products/expired.png"><#LANG_EXPIRED#></a></li>
+ <li [#if MISSING!=""#]class="active"[#endif#]><a href="?missing=1"><img src="<#ROOTHTML#>img/app_products/missing.png"><#LANG_MISSING#></a></li>
+ <li [#if SHOPPING!=""#]class="active"[#endif#]><a href="?shopping=1"><img src="<#ROOTHTML#>img/app_products/wallet.png"><#LANG_SHOPPING_LIST#></a></li>
 </ul>
 
 
@@ -323,7 +323,7 @@ color: #ececec;
  <a href="#" onClick="return inCart([#ID#]);"><img class="crug" src="<#ROOTHTML#>img/btn/notok.png" border="0"></a>
  </td>
 [#endif#]
- <td width="60px" style="text-align:center;">[#if IMAGE!=""#]<img style='max-height:50px;max-width: 50px;' src='/cms/products/[#IMAGE#]'>[#else#]<img style='max-height:50px;max-width: 50px;' src='/img/app_products/noimg.png'>[#endif#]</td>
+ <td width="60px" style="text-align:center;">[#if IMAGE!=""#]<img style='max-height:50px;max-width: 50px;' src='<#ROOTHTML#>cms/products/[#IMAGE#]'>[#else#]<img style='max-height:50px;max-width: 50px;' src='<#ROOTHTML#>img/app_products/noimg.png'>[#endif#]</td>
  <td width="400px">
   [#if "<#SHOPPING#>"!="1"#]<a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_products&id=[#ID#]"><b>[#TITLE#]</b></a>[#else#]<b>[#TITLE#]</b>[#endif#]
   [#if EXPIRE_TERM!="" && QTY!="0"#]
